@@ -1,4 +1,4 @@
-package de.moleon.planer.client;
+package de.moleon.planer.client.network;
 
 /**
  * @author David Humann (Moldiy)
