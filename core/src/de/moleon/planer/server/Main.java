@@ -1,4 +1,4 @@
-package de.leon.moleon.server.planer.mains;
+package de.moleon.planer.server;
 
 public class Main {
 	

@@ -1,4 +1,4 @@
-package de.moleon.planer;
+package de.moleon.planer.client;
 
 import com.badlogic.gdx.graphics.Color;
 
