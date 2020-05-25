@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.moleon.planer.client.libgdx.monitor.PixelChangeListener;
+import de.moleon.planer.client.libgdx.PixelChangeListener;
 import de.moleon.planer.client.network.supers.ServerConnection;
 
 /**
