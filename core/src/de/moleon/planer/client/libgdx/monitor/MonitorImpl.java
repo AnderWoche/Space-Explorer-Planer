@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Pool;
  */
 public class MonitorImpl extends Monitior {
 	
-	private Pool<T>
+	//private Pool<T>
 	
 	private HashMap<Long, Color> pixels = new HashMap<>();
 	
