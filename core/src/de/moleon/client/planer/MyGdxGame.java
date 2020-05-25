@@ -1,4 +1,4 @@
-package de.moleon.game;
+package de.moleon.client.planer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MyGdxGame extends ApplicationAdapter {
+	
+	private Monitior monitior;
+	
 	SpriteBatch batch;
 	Texture img;
 	
@@ -29,5 +32,13 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		img.dispose();
+	}
+	
+	public static MyGdxGame getMyGdxGame() {
+		return (MyGdxGame) Gdx.app.getApplicationListener();
+	}
+	
+	public Monitior getMonitior() {
+		return monitior;
 	}
 }
