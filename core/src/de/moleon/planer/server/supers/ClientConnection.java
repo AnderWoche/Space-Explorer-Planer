@@ -31,7 +31,9 @@ public class ClientConnection {
 	public ClientConnection(Socket socket) {
 		try {
 			this.socket = socket;
-
+			this.socket.setReceiveBufferSize(Integer.MAX_VALUE);
+			this.socket.setSendBufferSize(Integer.MAX_VALUE);
+			
 			this.dis = new DataInputStream(socket.getInputStream());
 			this.dos = new DataOutputStream(socket.getOutputStream());
 

@@ -35,8 +35,6 @@ public class TCPListener implements Runnable {
 							long xy = Long.parseLong(in[i]); i++;
 							int color = Integer.parseInt(in[i]);					
 							
-							System.out.println(xy + " " + color);
-							
 							for (int j = 0; j < ClientConnection.list.size(); j++) {
 								ClientConnection cc = ClientConnection.list.get(j);
 								

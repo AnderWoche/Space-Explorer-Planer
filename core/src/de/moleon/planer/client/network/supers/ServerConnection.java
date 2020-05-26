@@ -37,7 +37,9 @@ public class ServerConnection {
 	public void connect(Monitior monitor) {
 		try {
 			this.socket = new Socket(this.host, this.port);
-
+			this.socket.setReceiveBufferSize(Integer.MAX_VALUE);
+			this.socket.setSendBufferSize(Integer.MAX_VALUE);
+			
 			this.dis = new DataInputStream(this.socket.getInputStream());
 			this.dos = new DataOutputStream(this.socket.getOutputStream());
 
