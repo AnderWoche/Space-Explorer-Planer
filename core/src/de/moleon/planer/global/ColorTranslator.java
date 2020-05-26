@@ -14,15 +14,15 @@ public class ColorTranslator {
 	private ArrayList<ColorEntry> entrys = new ArrayList<ColorEntry>();
 	
 	private ColorTranslator() {
-		
+		this.load();
 	}
 	
 	/**
 	 * This method loads the color entrys
 	 */
 	public void load() {
-		new ColorEntry(Color.WHITE, 0);
-		new ColorEntry(Color.BLACK, 1);
+		this.entrys.add(new ColorEntry(Color.WHITE, 0));
+		this.entrys.add(new ColorEntry(Color.BLACK, 1));
 	}
 	
 	/**
@@ -37,6 +37,7 @@ public class ColorTranslator {
 			}
 		}
 		
+		System.out.println("-1");
 		return -1;
 	}
 	
@@ -52,6 +53,7 @@ public class ColorTranslator {
 			}
 		}
 		
+		System.out.println("null");
 		return null;
 	}
 	

@@ -43,7 +43,7 @@ public class TCPListener implements Runnable {
 							int colorID = Integer.parseInt(in[i]);					
 							
 							Color color = ColorTranslator.getInstance().getColorByID(colorID);
-							monitor.setPixel(xy, color);
+							this.monitor.setPixel(xy, color);
 						}
 					}
 					
