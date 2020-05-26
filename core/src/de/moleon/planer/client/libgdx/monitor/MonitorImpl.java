@@ -63,6 +63,12 @@ public class MonitorImpl extends Monitior {
 		this.pixels.put(xy, color);
 	}
 	
+	public void setPixelWithNotifyListener(int x, int y, Color color) {
+		long cords = this.convertToLongID(x, y);
+		this.pixels.put(cords, color);
+		this.notifyPixelChangedListener(cords, color);
+	}
+	
 	public void setPixelWithNotifyListener(long xy, Color color) {
 		this.pixels.put(xy, color);
 		this.notifyPixelChangedListener(xy, color);

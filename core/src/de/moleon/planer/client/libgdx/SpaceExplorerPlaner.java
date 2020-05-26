@@ -105,7 +105,7 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 	}
 	
 	public void drawPixel(int x, int y, Color color) {
-//		this.monitior.setPixelWithNotifyListener(x, y, Color.BLACK);
+		this.monitior.setPixelWithNotifyListener(x, y, Color.BLACK);
 	}
 	
 	@Override
