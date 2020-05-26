@@ -16,6 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pools;
 
+import de.moleon.planer.client.libgdx.monitor.Monitior;
+import de.moleon.planer.client.libgdx.monitor.MonitorImpl;
+
 public class SpaceExplorerPlaner extends ApplicationAdapter {
 	
 	private MonitorImpl monitior;
@@ -41,6 +44,7 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
+		System.out.println(Long.MAX_VALUE);
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 //		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(
@@ -62,6 +66,8 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 			this.buffer.rewind();
 			
 			this.shapeRenderer.rect(this.buffer.getInt(), this.buffer.getInt(), 2F, 2F);
+			
+			
 		}
 		
 		Vector3 vec = this.camera.unproject(Pools.obtain(Vector3.class).set(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -92,7 +98,6 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 //				this.drawPixel(x, y, Color.BLACK);
 			}
 			
-			
 		}
 		this.lastPosition.set(x, y);
 		Pools.free(vec);
@@ -101,17 +106,7 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 	}
 	
 	public void drawPixel(int x, int y, Color color) {
-		this.monitior.setPixelWithNotifyListener(x, y, Color.BLACK);
-		this.monitior.setPixelWithNotifyListener(x +1, y, Color.BLACK);
-		this.monitior.setPixelWithNotifyListener(x +2, y, Color.BLACK);
-		
-		this.monitior.setPixelWithNotifyListener(x, ++y, Color.BLACK);
-		this.monitior.setPixelWithNotifyListener(x +1, y, Color.BLACK);
-		this.monitior.setPixelWithNotifyListener(x +2, y, Color.BLACK);
-		
-		this.monitior.setPixelWithNotifyListener(x,++y, Color.BLACK);
-		this.monitior.setPixelWithNotifyListener(x +1, y, Color.BLACK);
-		this.monitior.setPixelWithNotifyListener(x +2, y, Color.BLACK);
+//		this.monitior.setPixelWithNotifyListener(x, y, Color.BLACK);
 	}
 	
 	@Override

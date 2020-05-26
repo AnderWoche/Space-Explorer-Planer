@@ -1,4 +1,4 @@
-package de.moleon.planer.client.libgdx;
+package de.moleon.planer.client.libgdx.monitor;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -9,6 +9,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
+import de.moleon.planer.client.libgdx.PixelChangeListener;
+import de.moleon.planer.client.libgdx.monitor.sections.MonitorSection;
+import de.moleon.planer.utils.SimpleGrid;
+
 /**
  * @author David Humann (Moldiy)
  */
@@ -16,12 +20,24 @@ public class MonitorImpl extends Monitior {
 	
 	private Pool<ByteBuffer> byteBufferPool;
 	
-	private HashMap<Long, Color> pixels = new HashMap<>();
+	private SimpleGrid grid = new SimpleGrid();
+	
+	
+	private Pool<MonitorSection> monitorSectionPool;
+	private HashMap<Long, MonitorSection> loadedSections = new HashMap<>();
+	
+	private HashMap<Long, Color> pixels = new HashMap<>();                                                 
 	
 	private Array<PixelChangeListener> pixelChangeListenerArray = new Array<>();
 	
 	
 	public MonitorImpl() {
+		this.grid.setFieldSize(400, 400);
+		this.monitorSectionPool = new Pool<MonitorSection>() {
+			protected MonitorSection newObject() {
+				return new MonitorSection();
+			}
+		};
 		this.byteBufferPool = new Pool<ByteBuffer>() {
 			@Override
 			protected ByteBuffer newObject() {
@@ -36,14 +52,18 @@ public class MonitorImpl extends Monitior {
 		
 		this.pixels.put(cords, color);
 		
+		int[] fieldPos = grid.getField(x, y);
+		
+		MonitorSection monitorSection = this.monitorSectionPool.obtain();
+		
+		
+		
 	}
 	
-	void setPixelWithNotifyListener(int x, int y, Color color) {
-		long cords = this.convertToLongID(x, y);
+	public void setPixelWithNotifyListener(long xy, Color color) {
+		this.pixels.put(xy, color);
 		
-		this.pixels.put(cords, color);
-		
-		this.notifyPixelChangedListener(x, y, color);
+		this.notifyPixelChangedListener(xy, color);
 		
 //		System.out.println("STORED PIXEL = " + pixels.size());
 	}
@@ -53,9 +73,9 @@ public class MonitorImpl extends Monitior {
 		this.pixelChangeListenerArray.add(pixelChangeListener);
 	}
 	
-	private synchronized void notifyPixelChangedListener(int x, int y, Color color) {
+	private synchronized void notifyPixelChangedListener(long xy, Color color) {
 		for(PixelChangeListener pixelChangeListener : this.pixelChangeListenerArray) {
-			pixelChangeListener.pixelChanged(x, y, color);
+			pixelChangeListener.pixelChanged(xy, color);
 		}
 	}
 
@@ -93,8 +113,20 @@ public class MonitorImpl extends Monitior {
 		return this.byteBufferPool;
 	}
 	
-	Set<Entry<Long, Color>> getAllPixels() {
+	public Set<Entry<Long, Color>> getAllPixels() {
 		return this.pixels.entrySet();
+	}
+
+	@Override
+	public void setPixel(long xy, Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Color getPixel(long xy) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

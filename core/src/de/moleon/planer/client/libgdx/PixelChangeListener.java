@@ -7,5 +7,5 @@ public interface PixelChangeListener {
 	/**
 	 * This method will call when a pixel is changed
 	 */
-	public void pixelChanged(int x, int y, Color color);
+	public void pixelChanged(long xy, Color color);
 }
