@@ -1,7 +1,6 @@
 package de.moleon.planer.client.libgdx.monitor.sections;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;

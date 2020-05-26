@@ -44,7 +44,6 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
-		System.out.println(Long.MAX_VALUE);
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 //		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(
