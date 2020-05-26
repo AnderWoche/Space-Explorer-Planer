@@ -35,6 +35,7 @@ public class MonitorImpl extends Monitior {
 		long cords = this.convertToLongID(x, y);
 		
 		this.pixels.put(cords, color);
+		
 	}
 	
 	void setPixelWithNotifyListener(int x, int y, Color color) {
@@ -43,6 +44,8 @@ public class MonitorImpl extends Monitior {
 		this.pixels.put(cords, color);
 		
 		this.notifyPixelChangedListener(x, y, color);
+		
+//		System.out.println("STORED PIXEL = " + pixels.size());
 	}
 
 	@Override
@@ -60,6 +63,11 @@ public class MonitorImpl extends Monitior {
 	public synchronized Color getPixel(int x, int y) {
 		long cords = this.convertToLongID(x, y);
 		Color color = this.pixels.get(cords);
+		
+		if(color == null) {
+			return Color.WHITE;
+		}
+		
 		return color;
 	}
 	
