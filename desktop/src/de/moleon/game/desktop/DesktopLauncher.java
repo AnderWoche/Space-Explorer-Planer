@@ -17,9 +17,6 @@ public class DesktopLauncher {
 		config.vSyncEnabled = false;
 		config.backgroundFPS = 60;
 		
-		ServerConnection serverConnection = new ServerConnection("catchadventure.ddns.net", 6334);
-		serverConnection.connect();
-		
 		new LwjglApplication(new SpaceExplorerPlaner(), config);
 	}
 }

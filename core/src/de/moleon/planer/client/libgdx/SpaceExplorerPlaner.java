@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Pools;
 
 import de.moleon.planer.client.libgdx.monitor.Monitior;
 import de.moleon.planer.client.libgdx.monitor.MonitorImpl;
+import de.moleon.planer.client.network.supers.ServerConnection;
 
 public class SpaceExplorerPlaner extends ApplicationAdapter {
 	
@@ -30,13 +31,15 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 	private ByteBuffer buffer = ByteBuffer.allocate(8);
 	
 	@Override
-	public void create () {
+	public void create () {		
 		this.monitior = new MonitorImpl();
 		this.camera = new OrthographicCamera();
 		this.shapeRenderer = new ShapeRenderer();
 		
 		this.camera.position.set(0, 0, 0);
 		
+		ServerConnection serverConnection = new ServerConnection("catchadventure.ddns.net", 6334);
+		serverConnection.connect();
 	}
 	
 	private Vector2 lastPosition = new Vector2();

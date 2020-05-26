@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.badlogic.gdx.graphics.Color;
 
 import de.moleon.planer.client.libgdx.PixelChangeListener;
+import de.moleon.planer.client.libgdx.SpaceExplorerPlaner;
 import de.moleon.planer.client.network.supers.ServerConnection;
 import de.moleon.planer.global.ColorTranslator;
 
@@ -18,12 +19,14 @@ public class TCPSender {
 
 		@Override
 		public void pixelChanged(long xy, Color color) {
-			send("SET " + " " + xy + " " + ColorTranslator.getInstance().getIDByColor(color));
+			send("SET " + xy + " " + ColorTranslator.getInstance().getIDByColor(color));
 		}
 	};
 	
 	public TCPSender(ServerConnection serverConnection) {
 		this.serverConnection = serverConnection;
+		
+		SpaceExplorerPlaner.getInstance().getMonitior().registerChangeListener(this.pixelChangeListener);
 	}
 	
 	/**

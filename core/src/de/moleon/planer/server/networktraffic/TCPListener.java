@@ -32,7 +32,7 @@ public class TCPListener implements Runnable {
 					
 					if(in[0].equals("SET")) {
 						for (int i = 1; i < in.length; i++) {
-							long xy = Long.parseLong(in[i++]);
+							long xy = Long.parseLong(in[i]); i++;
 							int color = Integer.parseInt(in[i]);					
 							
 							for (int j = 0; j < ClientConnection.list.size(); j++) {
