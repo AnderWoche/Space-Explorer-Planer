@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import de.moleon.planer.client.libgdx.monitor.Monitior;
 import de.moleon.planer.client.network.traffic.TCPListener;
 import de.moleon.planer.client.network.traffic.TCPSender;
 
@@ -33,18 +34,18 @@ public class ServerConnection {
 	/**
 	 * This method try to establish the connection to the server 
 	 */
-	public void connect() {
+	public void connect(Monitior monitor) {
 		try {
 			this.socket = new Socket(this.host, this.port);
 
 			this.dis = new DataInputStream(this.socket.getInputStream());
 			this.dos = new DataOutputStream(this.socket.getOutputStream());
 
-			this.tcpListener = new TCPListener(this);
+			this.tcpListener = new TCPListener(this, monitor);
 			this.tcpListener.thread = new Thread(this.tcpListener);
 			this.tcpListener.thread.start();
 
-			this.tcpSender = new TCPSender(this);
+			this.tcpSender = new TCPSender(this, monitor);
 			
 			this.connected = true;
 			

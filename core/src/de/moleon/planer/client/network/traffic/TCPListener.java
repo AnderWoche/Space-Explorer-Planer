@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.badlogic.gdx.graphics.Color;
 
-import de.moleon.planer.client.libgdx.SpaceExplorerPlaner;
+import de.moleon.planer.client.libgdx.monitor.Monitior;
 import de.moleon.planer.client.network.supers.ServerConnection;
 import de.moleon.planer.global.ColorTranslator;
 
@@ -14,12 +14,15 @@ import de.moleon.planer.global.ColorTranslator;
 public class TCPListener implements Runnable {
 
 	private ServerConnection serverConnection;
+	private Monitior monitor;
+	
 	public Thread thread;
 
 	private boolean running;
 
-	public TCPListener(ServerConnection serverConnection) {
+	public TCPListener(ServerConnection serverConnection, Monitior monitior) {
 		this.serverConnection = serverConnection;
+		this.monitor = monitior;
 	}
 
 	/**
@@ -40,7 +43,7 @@ public class TCPListener implements Runnable {
 							int colorID = Integer.parseInt(in[i]);					
 							
 							Color color = ColorTranslator.getInstance().getColorByID(colorID);
-							SpaceExplorerPlaner.getInstance().getMonitior().setPixel(xy, color);
+							monitor.setPixel(xy, color);
 						}
 					}
 					

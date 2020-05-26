@@ -39,7 +39,7 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 		this.camera.position.set(0, 0, 0);
 		
 		ServerConnection serverConnection = new ServerConnection("catchadventure.ddns.net", 6334);
-		serverConnection.connect();
+		serverConnection.connect(this.monitior);
 	}
 	
 	private Vector2 lastPosition = new Vector2();
