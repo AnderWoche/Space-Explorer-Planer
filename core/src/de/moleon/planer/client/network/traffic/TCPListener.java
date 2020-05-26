@@ -49,6 +49,10 @@ public class TCPListener implements Runnable {
 					
 				} catch (IOException e) {
 					this.serverConnection.error();
+				} catch(NumberFormatException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}
