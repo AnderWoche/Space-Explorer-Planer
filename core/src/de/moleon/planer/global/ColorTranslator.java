@@ -37,8 +37,7 @@ public class ColorTranslator {
 			}
 		}
 		
-		System.out.println("-1");
-		return -1;
+		return 0;
 	}
 	
 	/**
@@ -53,8 +52,7 @@ public class ColorTranslator {
 			}
 		}
 		
-		System.out.println("null");
-		return null;
+		return Color.WHITE;
 	}
 	
 	/**
