@@ -2,7 +2,10 @@ package de.moleon.planer.client.network.traffic;
 
 import java.io.IOException;
 
+import com.badlogic.gdx.graphics.Color;
+
 import de.moleon.planer.client.network.supers.ServerConnection;
+import de.moleon.planer.global.ColorTranslator;
 
 /**
  * Copyright © 2020 Leon Rüsing - All Rights Reserved
@@ -32,20 +35,12 @@ public class TCPListener implements Runnable {
 					
 					if(in[0].equals("SET")) {
 						for (int i = 1; i < in.length; i++) {
-							/*
-							int x = Integer.parseInt(in[i++]);
-							int y = Integer.parseInt(in[i++]);
-							int color = Integer.parseInt(in[i]);					
+							long xy = Long.parseLong(in[i++]);
+							int colorID = Integer.parseInt(in[i]);					
 							
-							switch (color) {
-							case 0:
-								break;
-							case 1:
-								break;
-							default:
-								break;
-							}
-							*/
+							Color color = ColorTranslator.getInstance().getColorByID(colorID);
+							
+							// Set the pixel here
 						}
 					}
 					

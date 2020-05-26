@@ -32,15 +32,14 @@ public class TCPListener implements Runnable {
 					
 					if(in[0].equals("SET")) {
 						for (int i = 1; i < in.length; i++) {
-							int x = Integer.parseInt(in[i++]);
-							int y = Integer.parseInt(in[i++]);
+							long xy = Long.parseLong(in[i++]);
 							int color = Integer.parseInt(in[i]);					
 							
 							for (int j = 0; j < ClientConnection.list.size(); j++) {
 								ClientConnection cc = ClientConnection.list.get(j);
 								
 								if(cc.isConnected()) {
-									cc.getTcpSender().send("SET " + x + " " + y + " " + color);
+									cc.getTcpSender().send("SET " + xy + " " + color);
 								}
 							}
 						}

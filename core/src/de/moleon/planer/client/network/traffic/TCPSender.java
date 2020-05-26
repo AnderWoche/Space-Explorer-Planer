@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 
 import de.moleon.planer.client.libgdx.PixelChangeListener;
 import de.moleon.planer.client.network.supers.ServerConnection;
+import de.moleon.planer.global.ColorTranslator;
 
 /**
  * Copyright © 2020 Leon Rüsing - All Rights Reserved
@@ -16,8 +17,8 @@ public class TCPSender {
 	private PixelChangeListener pixelChangeListener = new PixelChangeListener() {
 
 		@Override
-		public void pixelChanged(int x, int y, Color color) {
-			send("SET " + x + " " + y + " " + color);
+		public void pixelChanged(long xy, Color color) {
+			send("SET " + " " + xy + " " + ColorTranslator.getInstance().getIDByColor(color));
 		}
 	};
 	
