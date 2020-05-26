@@ -120,7 +120,7 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 	public void dispose () {
 	}
 	
-	public static SpaceExplorerPlaner getSpaceExplorerPlaner() {
+	public static SpaceExplorerPlaner getInstance() {
 		return (SpaceExplorerPlaner) Gdx.app.getApplicationListener();
 	}
 	

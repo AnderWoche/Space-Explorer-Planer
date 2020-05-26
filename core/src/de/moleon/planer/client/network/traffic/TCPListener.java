@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.badlogic.gdx.graphics.Color;
 
+import de.moleon.planer.client.libgdx.SpaceExplorerPlaner;
 import de.moleon.planer.client.network.supers.ServerConnection;
 import de.moleon.planer.global.ColorTranslator;
 
@@ -39,8 +40,7 @@ public class TCPListener implements Runnable {
 							int colorID = Integer.parseInt(in[i]);					
 							
 							Color color = ColorTranslator.getInstance().getColorByID(colorID);
-							
-							// Set the pixel here
+							SpaceExplorerPlaner.getInstance().getMonitior().setPixel(xy, color);
 						}
 					}
 					

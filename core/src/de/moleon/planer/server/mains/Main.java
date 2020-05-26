@@ -17,10 +17,8 @@ public class Main {
 		Main.server.start();
 		
 		/*
-		ServerConnection serverConnection = new ServerConnection("localhost", 6334);
+		ServerConnection serverConnection = new ServerConnection("catchadventure.ddns.net", 6334);
 		serverConnection.connect();
-		
-		serverConnection.getTcpSender().send("<PACKETNAME>");
 		*/
 	}
 	
