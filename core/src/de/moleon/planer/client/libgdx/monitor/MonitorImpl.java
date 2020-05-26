@@ -1,7 +1,9 @@
 package de.moleon.planer.client.libgdx.monitor;
 
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -21,7 +23,7 @@ public class MonitorImpl extends Monitior {
 	private Pool<ByteBuffer> byteBufferPool;
 	
 	
-	private HashMap<Long, Color> pixels = new HashMap<>();                                                 
+	private Map<Long, Color> pixels = Collections.synchronizedMap(new HashMap<Long, Color>());                             
 	private Array<PixelChangeListener> pixelChangeListenerArray = new Array<>();
 	
 	private SimpleGrid grid = new SimpleGrid();

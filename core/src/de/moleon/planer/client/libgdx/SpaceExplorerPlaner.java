@@ -1,8 +1,11 @@
 package de.moleon.planer.client.libgdx;
 
 import java.nio.ByteBuffer;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Spliterator;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -45,6 +48,8 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 	private Vector2 lastPosition = new Vector2();
 	private Vector2 calculateVec = new Vector2();
 	
+	private volatile Map.Entry<Long, Color>[] propertyEntries = null;
+	
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -56,8 +61,10 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 		this.shapeRenderer.setProjectionMatrix(this.camera.combined);
 		this.shapeRenderer.begin(ShapeType.Filled);
 		
-		Set<Entry<Long, Color>> pixels = this.monitior.getAllPixels();
-		for(Entry<Long, Color> cordsAndColor : pixels) {
+		
+		propertyEntries = this.monitior.getAllPixels().toArray(new Map.Entry[this.monitior.getAllPixels().size()]);
+		
+		for(Entry<Long, Color> cordsAndColor : propertyEntries) { // pixels
 			long longCord = cordsAndColor.getKey();
 			Color color = cordsAndColor.getValue();
 			
@@ -68,8 +75,6 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 			this.buffer.rewind();
 			
 			this.shapeRenderer.rect(this.buffer.getInt(), this.buffer.getInt(), 2F, 2F);
-			
-			
 		}
 		
 		Vector3 vec = this.camera.unproject(Pools.obtain(Vector3.class).set(Gdx.input.getX(), Gdx.input.getY(), 0));
