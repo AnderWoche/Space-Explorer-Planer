@@ -20,16 +20,14 @@ public class MonitorImpl extends Monitior {
 	
 	private Pool<ByteBuffer> byteBufferPool;
 	
-	private SimpleGrid grid = new SimpleGrid();
 	
+	private HashMap<Long, Color> pixels = new HashMap<>();                                                 
+	private Array<PixelChangeListener> pixelChangeListenerArray = new Array<>();
+	
+	private SimpleGrid grid = new SimpleGrid();
 	
 	private Pool<MonitorSection> monitorSectionPool;
 	private HashMap<Long, MonitorSection> loadedSections = new HashMap<>();
-	
-	private HashMap<Long, Color> pixels = new HashMap<>();                                                 
-	
-	private Array<PixelChangeListener> pixelChangeListenerArray = new Array<>();
-	
 	
 	public MonitorImpl() {
 		this.grid.setFieldSize(400, 400);
@@ -45,7 +43,7 @@ public class MonitorImpl extends Monitior {
 			}
 		};
 	}
-
+	
 	@Override
 	public synchronized void setPixel(int x, int y, Color color) {
 		long cords = this.convertToLongID(x, y);
@@ -56,16 +54,18 @@ public class MonitorImpl extends Monitior {
 		
 		MonitorSection monitorSection = this.monitorSectionPool.obtain();
 		
+		monitorSection.laodSection(fieldPos[0], fieldPos[0]);
 		
-		
+	}
+	
+	@Override
+	public void setPixel(long xy, Color color) {
+		this.pixels.put(xy, color);
 	}
 	
 	public void setPixelWithNotifyListener(long xy, Color color) {
 		this.pixels.put(xy, color);
-		
 		this.notifyPixelChangedListener(xy, color);
-		
-//		System.out.println("STORED PIXEL = " + pixels.size());
 	}
 
 	@Override
@@ -80,9 +80,20 @@ public class MonitorImpl extends Monitior {
 	}
 
 	@Override
-	public synchronized Color getPixel(int x, int y) {
+	public Color getPixel(int x, int y) {
 		long cords = this.convertToLongID(x, y);
 		Color color = this.pixels.get(cords);
+		
+		if(color == null) {
+			return Color.WHITE;
+		}
+		
+		return color;
+	}
+	
+	@Override
+	public Color getPixel(long xy) {
+		Color color = this.pixels.get(xy);
 		
 		if(color == null) {
 			return Color.WHITE;
@@ -117,16 +128,4 @@ public class MonitorImpl extends Monitior {
 		return this.pixels.entrySet();
 	}
 
-	@Override
-	public void setPixel(long xy, Color color) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Color getPixel(long xy) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

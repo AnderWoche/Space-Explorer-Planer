@@ -1,8 +1,11 @@
 package de.moleon.planer.client.libgdx.monitor.sections;
 
 import java.io.File;
+import java.io.IOException;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
@@ -28,13 +31,16 @@ public class MonitorSection implements Poolable {
 	private Pixmap pixmap;
 
 	public MonitorSection() {
-
+		
 	}
 	
 	public void laodSection(int x, int y) {
 		File file = new File(SECTIONS_FILE, "section." + x + "." + y);
 		if(file.exists()) {
+			this.pixmap = new Pixmap(Gdx.files.absolute(file.getAbsolutePath()));
 			// LOAD
+		} else {
+			this.pixmap = new Pixmap(400, 400, Format.RGBA8888);
 		}
 	}
 
