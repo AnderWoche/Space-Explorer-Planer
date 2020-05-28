@@ -1,11 +1,7 @@
 package de.moleon.planer.client.libgdx;
 
 import java.nio.ByteBuffer;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Spliterator;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -13,75 +9,76 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pools;
 
 import de.moleon.planer.client.libgdx.monitor.Monitior;
 import de.moleon.planer.client.libgdx.monitor.MonitorImpl;
-import de.moleon.planer.client.network.supers.ServerConnection;
+import de.moleon.planer.client.libgdx.monitor.sections.MonitorSection;
 
 public class SpaceExplorerPlaner extends ApplicationAdapter {
-	
+
 	private MonitorImpl monitior;
-	
+
 	private OrthographicCamera camera;
-	
+
+	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
-	
+
 	private ByteBuffer buffer = ByteBuffer.allocate(8);
-	
+
 	@Override
-	public void create () {		
+	public void create() {
+		String s = new String();
+		
 		this.monitior = new MonitorImpl();
 		this.camera = new OrthographicCamera();
+
+		this.batch = new SpriteBatch();
 		this.shapeRenderer = new ShapeRenderer();
-		
+
 		this.camera.position.set(0, 0, 0);
-		
-		ServerConnection serverConnection = new ServerConnection("catchadventure.ddns.net", 6334);
-		serverConnection.connect(this.monitior);
+
+		// ServerConnection serverConnection = new
+		// ServerConnection("catchadventure.ddns.net", 6334);
+		// serverConnection.connect(this.monitior);
 	}
-	
+
 	private Vector2 lastPosition = new Vector2();
 	private Vector2 calculateVec = new Vector2();
-	
+
 	private volatile Map.Entry<Long, Color>[] propertyEntries = null;
-	
+
 	@Override
-	public void render () {
+	public void render() {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(
 				GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 		Gdx.gl.glHint(GL20.GL_LINE_LOOP, GL20.GL_NICEST);
+
+//		this.shapeRenderer.setProjectionMatrix(this.camera.combined);
+//		this.shapeRenderer.begin(ShapeType.Filled);
+//		for (MonitorSection section : this.monitior.getLoadedSections().values()) {
+//			section.drawShape(shapeRenderer);
+//		}
+//		this.shapeRenderer.end();
 		
-		this.shapeRenderer.setProjectionMatrix(this.camera.combined);
-		this.shapeRenderer.begin(ShapeType.Filled);
-		
-		
-		propertyEntries = this.monitior.getAllPixels().toArray(new Map.Entry[this.monitior.getAllPixels().size()]);
-		
-		for(Entry<Long, Color> cordsAndColor : propertyEntries) { // pixels
-			long longCord = cordsAndColor.getKey();
-			Color color = cordsAndColor.getValue();
-			
-			this.shapeRenderer.setColor(color);
-			
-			this.buffer.rewind();
-			this.buffer.putLong(longCord);
-			this.buffer.rewind();
-			
-			this.shapeRenderer.rect(this.buffer.getInt(), this.buffer.getInt(), 2F, 2F);
+		this.batch.setProjectionMatrix(this.camera.combined);
+		this.batch.begin();
+		for (MonitorSection section : this.monitior.getLoadedSections().values()) {
+			section.draw(batch, Gdx.graphics.getDeltaTime());
 		}
-		
+		this.batch.end();
+
 		Vector3 vec = this.camera.unproject(Pools.obtain(Vector3.class).set(Gdx.input.getX(), Gdx.input.getY(), 0));
 		int x = (int) vec.x;
 		int y = (int) vec.y;
-		
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+
+		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			this.calculateVec.set(x, y);
 			float lenght;
 			do {
@@ -89,33 +86,31 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 				lenght = this.calculateVec.len();
 				this.calculateVec.nor();
 				this.calculateVec.scl(1.3F);
-				
+
 				lastPosition.add(calculateVec);
-				
+
 				this.calculateVec.set(x + this.calculateVec.x, y + this.calculateVec.y);
-				
-				this.drawPixel((int)lastPosition.x, (int)lastPosition.y, Color.BLACK);
-				
-			} while(lenght > 2);
-			
-			
-			Color color = this.monitior.getPixel(x, y);
-			
-			if(color == Color.WHITE) {
-//				this.drawPixel(x, y, Color.BLACK);
-			}
-			
+
+				this.drawPixel((int) lastPosition.x, (int) lastPosition.y, Color.BLACK);
+
+			} while (lenght > 2);
+
+			// Color color = this.monitior.getPixel(x, y);
+
+			// if(color == Color.WHITE) {
+			// this.drawPixel(x, y, Color.BLACK);
+			// }
+
 		}
 		this.lastPosition.set(x, y);
 		Pools.free(vec);
-		
-		shapeRenderer.end();
+
 	}
-	
+
 	public void drawPixel(int x, int y, Color color) {
 		this.monitior.setPixelWithNotifyListener(x, y, Color.BLACK);
 	}
-	
+
 	@Override
 	public void resize(int width, int height) {
 		this.camera.viewportWidth = width;
@@ -123,15 +118,15 @@ public class SpaceExplorerPlaner extends ApplicationAdapter {
 		this.camera.update();
 		super.resize(width, height);
 	}
-	
+
 	@Override
-	public void dispose () {
+	public void dispose() {
 	}
-	
+
 	public static SpaceExplorerPlaner getInstance() {
 		return (SpaceExplorerPlaner) Gdx.app.getApplicationListener();
 	}
-	
+
 	public Monitior getMonitior() {
 		return monitior;
 	}

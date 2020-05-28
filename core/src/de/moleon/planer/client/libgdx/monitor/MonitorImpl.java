@@ -1,11 +1,7 @@
 package de.moleon.planer.client.libgdx.monitor;
 
 import java.nio.ByteBuffer;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
@@ -13,7 +9,6 @@ import com.badlogic.gdx.utils.Pool;
 
 import de.moleon.planer.client.libgdx.PixelChangeListener;
 import de.moleon.planer.client.libgdx.monitor.sections.MonitorSection;
-import de.moleon.planer.utils.SimpleGrid;
 
 /**
  * @author David Humann (Moldiy)
@@ -22,17 +17,12 @@ public class MonitorImpl extends Monitior {
 	
 	private Pool<ByteBuffer> byteBufferPool;
 	
-	
-	private Map<Long, Color> pixels = Collections.synchronizedMap(new HashMap<Long, Color>());                             
 	private Array<PixelChangeListener> pixelChangeListenerArray = new Array<>();
-	
-	private SimpleGrid grid = new SimpleGrid();
 	
 	private Pool<MonitorSection> monitorSectionPool;
 	private HashMap<Long, MonitorSection> loadedSections = new HashMap<>();
 	
 	public MonitorImpl() {
-		this.grid.setFieldSize(400, 400);
 		this.monitorSectionPool = new Pool<MonitorSection>() {
 			protected MonitorSection newObject() {
 				return new MonitorSection();
@@ -46,33 +36,41 @@ public class MonitorImpl extends Monitior {
 		};
 	}
 	
+	public MonitorSection getOrLoadMonitorSection(int pixelX, int pixelY) {
+		int[] field = MonitorSection.GRID.getField(pixelX, pixelY);
+		long sectionCord = this.convertToLongID(field[0], field[1]);
+		
+		MonitorSection monitorSection = this.loadedSections.get(sectionCord);
+		
+		if(monitorSection == null) {
+			monitorSection = monitorSectionPool.obtain();
+			monitorSection.laodSection(pixelX, pixelY);
+			this.loadedSections.put(sectionCord, monitorSection);
+		}
+		
+		return monitorSection;
+	}
+	
 	@Override
 	public synchronized void setPixel(int x, int y, Color color) {
-		long cords = this.convertToLongID(x, y);
-		
-		this.pixels.put(cords, color);
-		
-		int[] fieldPos = grid.getField(x, y);
-		
-		MonitorSection monitorSection = this.monitorSectionPool.obtain();
-		
-		monitorSection.laodSection(fieldPos[0], fieldPos[0]);
-		
+		MonitorSection monitorSection = this.getOrLoadMonitorSection(x, y);
+		monitorSection.setPixel(x, y, color);
 	}
 	
 	@Override
 	public void setPixel(long xy, Color color) {
-		this.pixels.put(xy, color);
+		int[] cords = this.convertToIntID(xy);
+		MonitorSection monitorSection = this.getOrLoadMonitorSection(cords[0], cords[1]);
+		monitorSection.setPixel(cords[0], cords[1], color);
 	}
 	
 	public void setPixelWithNotifyListener(int x, int y, Color color) {
-		long cords = this.convertToLongID(x, y);
-		this.pixels.put(cords, color);
-		this.notifyPixelChangedListener(cords, color);
+		this.setPixel(x, y, color);
+		this.notifyPixelChangedListener(this.convertToLongID(x, y), color);
 	}
 	
 	public void setPixelWithNotifyListener(long xy, Color color) {
-		this.pixels.put(xy, color);
+		this.setPixel(xy, color);
 		this.notifyPixelChangedListener(xy, color);
 	}
 
@@ -89,8 +87,8 @@ public class MonitorImpl extends Monitior {
 
 	@Override
 	public Color getPixel(int x, int y) {
-		long cords = this.convertToLongID(x, y);
-		Color color = this.pixels.get(cords);
+		MonitorSection monitorSection = this.getOrLoadMonitorSection(x, y);
+		Color color = monitorSection.getPixel(x, y);
 		
 		if(color == null) {
 			return Color.WHITE;
@@ -101,7 +99,9 @@ public class MonitorImpl extends Monitior {
 	
 	@Override
 	public Color getPixel(long xy) {
-		Color color = this.pixels.get(xy);
+		int[] intCords = this.convertToIntID(xy);
+		MonitorSection monitorSection = this.getOrLoadMonitorSection(intCords[0], intCords[1]);
+		Color color = monitorSection.getPixel(intCords[0], intCords[1]);
 		
 		if(color == null) {
 			return Color.WHITE;
@@ -125,6 +125,21 @@ public class MonitorImpl extends Monitior {
 		return cordinates;
 	}
 	
+	public int[] convertToIntID(long cord) {
+		ByteBuffer buffer = this.byteBufferPool.obtain();
+		buffer.rewind();
+		buffer.putLong(cord);
+		
+		buffer.rewind();
+		
+		int cordinatesX = buffer.getInt();
+		int cordinatesY = buffer.getInt();
+		
+		this.byteBufferPool.free(buffer);
+		
+		return new int[] {cordinatesX, cordinatesY};
+	}
+	
 	/**
 	 * @return the byteBufferPool
 	 */
@@ -132,8 +147,11 @@ public class MonitorImpl extends Monitior {
 		return this.byteBufferPool;
 	}
 	
-	public Set<Entry<Long, Color>> getAllPixels() {
-		return this.pixels.entrySet();
+	/**
+	 * @return the loadedSections
+	 */
+	public HashMap<Long, MonitorSection> getLoadedSections() {
+		return loadedSections;
 	}
 
 }
