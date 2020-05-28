@@ -36,7 +36,7 @@ public class MonitorImpl extends Monitior {
 		};
 	}
 	
-	public MonitorSection getOrLoadMonitorSection(int pixelX, int pixelY) {
+	public MonitorSection getOrLoadMonitorSectionFromPixelCords(int pixelX, int pixelY) {
 		int[] field = MonitorSection.GRID.getField(pixelX, pixelY);
 		long sectionCord = this.convertToLongID(field[0], field[1]);
 		
@@ -51,16 +51,31 @@ public class MonitorImpl extends Monitior {
 		return monitorSection;
 	}
 	
+	public MonitorSection getOrLoadMonitorSectionFromField(int fieldX, int fieldY) {
+		int[] field = MonitorSection.GRID.getField(fieldX, fieldY);
+		long sectionCord = this.convertToLongID(field[0], field[1]);
+		
+		MonitorSection monitorSection = this.loadedSections.get(sectionCord);
+		
+		if(monitorSection == null) {
+			monitorSection = monitorSectionPool.obtain();
+			monitorSection.laodSectionFromField(fieldX, fieldY);
+			this.loadedSections.put(sectionCord, monitorSection);
+		}
+		
+		return monitorSection;
+	}
+	
 	@Override
 	public synchronized void setPixel(int x, int y, Color color) {
-		MonitorSection monitorSection = this.getOrLoadMonitorSection(x, y);
+		MonitorSection monitorSection = this.getOrLoadMonitorSectionFromPixelCords(x, y);
 		monitorSection.setPixel(x, y, color);
 	}
 	
 	@Override
 	public void setPixel(long xy, Color color) {
 		int[] cords = this.convertToIntID(xy);
-		MonitorSection monitorSection = this.getOrLoadMonitorSection(cords[0], cords[1]);
+		MonitorSection monitorSection = this.getOrLoadMonitorSectionFromPixelCords(cords[0], cords[1]);
 		monitorSection.setPixel(cords[0], cords[1], color);
 	}
 	
@@ -87,7 +102,7 @@ public class MonitorImpl extends Monitior {
 
 	@Override
 	public Color getPixel(int x, int y) {
-		MonitorSection monitorSection = this.getOrLoadMonitorSection(x, y);
+		MonitorSection monitorSection = this.getOrLoadMonitorSectionFromPixelCords(x, y);
 		Color color = monitorSection.getPixel(x, y);
 		
 		if(color == null) {
@@ -100,7 +115,7 @@ public class MonitorImpl extends Monitior {
 	@Override
 	public Color getPixel(long xy) {
 		int[] intCords = this.convertToIntID(xy);
-		MonitorSection monitorSection = this.getOrLoadMonitorSection(intCords[0], intCords[1]);
+		MonitorSection monitorSection = this.getOrLoadMonitorSectionFromPixelCords(intCords[0], intCords[1]);
 		Color color = monitorSection.getPixel(intCords[0], intCords[1]);
 		
 		if(color == null) {

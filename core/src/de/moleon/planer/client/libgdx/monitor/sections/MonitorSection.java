@@ -3,9 +3,11 @@ package de.moleon.planer.client.libgdx.monitor.sections;
 import java.io.File;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -105,6 +107,18 @@ public class MonitorSection implements Poolable {
 			this.pixmap = new Pixmap(400, 400, Format.RGBA8888);
 		}
 	}
+	
+	public void laodSectionFromField(float fieldX, float fieldY) {
+		this.sectionPos = new int[] {(int) fieldX, (int) fieldY};
+		this.worldPos = MonitorSection.GRID.getWorldPosition(this.sectionPos);
+		File file = new File(SECTIONS_FILE, "/section." + sectionPos[0] + "." + sectionPos[1]);
+		if (file.exists()) {
+			this.pixmap = new Pixmap(Gdx.files.absolute(file.getAbsolutePath()));
+			// LOAD
+		} else {
+			this.pixmap = new Pixmap(400, 400, Format.RGBA8888);
+		}
+	}
 
 	public void updateTexture() {
 		if (this.texture != null) {
@@ -116,9 +130,18 @@ public class MonitorSection implements Poolable {
 	public float[] getWorldPos() {
 		return this.worldPos;
 	}
+	
+	/**
+	 * @return the sectionPos
+	 */
+	public int[] getSectionPos() {
+		return sectionPos;
+	}
 
 	@Override
 	public void reset() {
+		PixmapIO.writePNG(new FileHandle(new File(SECTIONS_FILE, "/section." + this.sectionPos[0] + "." + this.sectionPos[1])), this.pixmap);
+		
 		this.texture.dispose();
 		this.pixmap.dispose();
 
