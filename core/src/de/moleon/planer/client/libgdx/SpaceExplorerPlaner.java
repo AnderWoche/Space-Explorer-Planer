@@ -39,9 +39,8 @@ public class SpaceExplorerPlaner extends ApplicationAdapter implements InputProc
 
 		this.camera.position.set(0, 0, 0);
 
-		// ServerConnection serverConnection = new
-		// ServerConnection("catchadventure.ddns.net", 6334);
-		// serverConnection.connect(this.monitior);
+//		ServerConnection serverConnection = new ServerConnection("catchadventure.ddns.net", 6334);
+//		serverConnection.connect(this.monitior);
 
 		Gdx.input.setInputProcessor(this);
 	}
