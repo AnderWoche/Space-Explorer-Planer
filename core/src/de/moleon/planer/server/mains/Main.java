@@ -3,7 +3,7 @@ package de.moleon.planer.server.mains;
 import de.moleon.planer.server.supers.Server;
 
 /**
- * Copyright © 2020 Leon Rüsing - All Rights Reserved
+ * Copyright ï¿½ 2020 Leon Rï¿½sing - All Rights Reserved
  */
 public class Main {
 	

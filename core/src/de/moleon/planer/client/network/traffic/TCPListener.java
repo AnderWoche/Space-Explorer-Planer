@@ -9,7 +9,7 @@ import de.moleon.planer.client.network.supers.ServerConnection;
 import de.moleon.planer.global.ColorTranslator;
 
 /**
- * Copyright © 2020 Leon Rüsing - All Rights Reserved
+ * Copyright ï¿½ 2020 Leon Rï¿½sing - All Rights Reserved
  */
 public class TCPListener implements Runnable {
 

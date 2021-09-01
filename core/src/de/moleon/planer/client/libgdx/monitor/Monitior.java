@@ -2,10 +2,18 @@ package de.moleon.planer.client.libgdx.monitor;
 
 import com.badlogic.gdx.graphics.Color;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import de.moleon.planer.client.libgdx.PixelChangeListener;
 
-public abstract class Monitior {
-	
+public abstract class Monitior extends Stage {
+
+	public Monitior(Viewport viewport) {
+		super(viewport);
+	}
+
 	/**
 	 * This method sets a pixel
 	 */

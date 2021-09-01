@@ -9,19 +9,11 @@ import com.badlogic.gdx.utils.Array;
  */
 public class SimpleGrid {
 
-	private int fieldWidth = 100;
-	private int fieldHeight = 100;
+	public int fieldWidth = 100;
+	public int fieldHeight = 100;
 
 	public SimpleGrid() {
 
-	}
-
-	public void setFieldWidth(int fieldWidth) {
-		this.fieldWidth = fieldWidth;
-	}
-
-	public void setFieldHeight(int fieldHeight) {
-		this.fieldHeight = fieldHeight;
 	}
 
 	public void setFieldSize(int fieldWidth, int fieldHeight) {
