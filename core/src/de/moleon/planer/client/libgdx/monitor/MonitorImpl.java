@@ -3,19 +3,13 @@ package de.moleon.planer.client.libgdx.monitor;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
@@ -23,7 +17,6 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import de.moleon.planer.client.libgdx.PixelChangeListener;
 import de.moleon.planer.client.libgdx.monitor.sections.MonitorSection;
-import de.moleon.planer.utils.SimpleGrid;
 
 /**
  * @author David Humann (Moldiy)
@@ -38,8 +31,6 @@ public class MonitorImpl extends Stage {
 	private HashMap<Long, MonitorSection> loadedSections = new HashMap<>();
 
 	public static final Texture img = new Texture(Gdx.files.internal("badlogic.jpg"));
-
-	InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
 	public MonitorImpl(Viewport viewport) {
 		super(viewport);
@@ -56,15 +47,7 @@ public class MonitorImpl extends Stage {
 			}
 		};
 
-		this.addListener(new ClickListener() {
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println(x + " : " + y);
-				return super.touchDown(event, x, y, pointer, button);
-			}
-		});
-		inputMultiplexer.addProcessor(this);
-		Gdx.input.setInputProcessor(inputMultiplexer);
+		Gdx.input.setInputProcessor(this);
 	}
 
 //	public MonitorSection getOrLoadMonitorSectionFromPixelCords(int pixelX, int pixelY) {
@@ -201,7 +184,7 @@ public class MonitorImpl extends Stage {
 		int[] gridXY = MonitorSection.GRID.getField(camera.position.x, camera.position.y);
 		Array<int[]> cords = MonitorSection.GRID.getFieldsAround(gridXY[0] - 1, gridXY[1] - 1, 2);
 
-		super.clear();
+		super.getRoot().clearChildren();
 
 		float width = MonitorSection.GRID.fieldWidth;
 		float height = MonitorSection.GRID.fieldHeight;
@@ -210,7 +193,7 @@ public class MonitorImpl extends Stage {
 			MonitorSection image = new MonitorSection();
 			image.setSize(width, height);
 			image.setPosition(xy[0] * width, xy[1] * height);
-			this.inputMultiplexer.addProcessor(image);
+//			this.inputMultiplexer.addProcessor(image);
 			super.addActor(image);
 		}
 
@@ -250,7 +233,7 @@ public class MonitorImpl extends Stage {
 			this.camPos.set(camera.position.x, camera.position.y);
 
 		}
-		return false;
+		return super.touchDown(screenX, screenY, pointer, button);
 	}
 
 	@Override
@@ -272,7 +255,7 @@ public class MonitorImpl extends Stage {
 
 			Pools.free(vecLenght);
 		}
-		return false;
+		return super.touchDragged(screenX, screenY, pointer);
 	}
 
 	public boolean scrolled(int amount) {
@@ -288,6 +271,6 @@ public class MonitorImpl extends Stage {
 				camera.update();
 			}
 		}
-		return false;
+		return super.scrolled(amount);
 	}
 }

@@ -45,13 +45,14 @@ public class MonitorSection extends Actor implements Poolable {
 		}
 	}
 
-	private int[] sectionPos;
+	public int fieldX;
+	public int fieldY;
 
 	private final Color[][] colors = new Color[GRID.fieldWidth][GRID.fieldHeight];
 
 	private Texture texture;
 
-	private Pixmap pixmap;
+	private Pixmap pixmap = new Pixmap(800, 800, Format.RGBA8888);
 
 	public MonitorSection() {
 		super.setTouchable(Touchable.enabled);
@@ -59,19 +60,21 @@ public class MonitorSection extends Actor implements Poolable {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println(x + " : " + y);
+//				colors[(int)x][(int)y] = Color.CYAN;
+				setPixel((int)x, (int)y, Color.CYAN);
 				return super.touchDown(event, x, y, pointer, button);
 			}
-
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				System.out.println(x + " : " + y);
+//				colors[(int)x][(int)y] = Color.CYAN;
+				setPixel((int)x, (int)y, Color.CYAN);
 //				colors[(int)x][(int)y] = Color.BLACK;
 				super.clicked(event, x, y);
 			}
-
 			@Override
 			public boolean mouseMoved(InputEvent event, float x, float y) {
-//				System.out.println(x + " : " + y);
+//				colors[(int)x][(int)y] = Color.CYAN;
+				setPixel((int)x, (int)y, Color.CYAN);
 				return super.mouseMoved(event, x, y);
 			}
 		});
@@ -84,23 +87,20 @@ public class MonitorSection extends Actor implements Poolable {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
+		batch.draw(MonitorImpl.img, super.getX(), super.getY(), super.getWidth(), super.getHeight());
 		if (this.texture != null) {
 			batch.draw(this.texture, super.getX(), super.getY());
 		}
-		batch.draw(MonitorImpl.img, super.getX(), super.getY(), super.getWidth(), super.getHeight());
 		super.draw(batch, parentAlpha);
 	}
 
 	public void setPixel(int x, int y, Color color) {
-//		int pixelX = (int) (x - this.worldPos[0]);
-//		int pixelY = (int) (y - this.worldPos[1]);
+		this.colors[x][y] = color;
 
-//		this.colors[pixelX][pixelY] = color;
-//
-//		this.pixmap.setColor(color);
-//		this.pixmap.drawPixel(pixelX, 400 - pixelY);
-//
-//		this.updateTexture();
+		this.pixmap.setColor(color);
+		this.pixmap.drawPixel(x, 800 - y);
+
+		this.updateTexture();
 	}
 
 //	public Color getPixel(int x, int y) {
@@ -129,17 +129,17 @@ public class MonitorSection extends Actor implements Poolable {
 //		}
 //	}
 	
-//	public void laodSectionFromField(float fieldX, float fieldY) {
-//		this.sectionPos = new int[] {(int) fieldX, (int) fieldY};
-//		this.worldPos = MonitorSection.GRID.getWorldPosition(this.sectionPos);
-//		File file = new File(SECTIONS_FILE, "/section." + sectionPos[0] + "." + sectionPos[1]);
-//		if (file.exists()) {
-//			this.pixmap = new Pixmap(Gdx.files.absolute(file.getAbsolutePath()));
-//			// LOAD
-//		} else {
-//			this.pixmap = new Pixmap(400, 400, Format.RGBA8888);
-//		}
-//	}
+	public void loadSectionFromField(int fieldX, int fieldY) {
+		this.fieldX = fieldX;
+		this.fieldY = fieldY;
+		File file = new File(SECTIONS_FILE, "/section." + fieldX + "." + fieldY);
+		if (file.exists()) {
+			this.pixmap = new Pixmap(Gdx.files.absolute(file.getAbsolutePath()));
+			// LOAD
+		} else {
+			this.pixmap = new Pixmap(400, 400, Format.RGBA8888);
+		}
+	}
 
 	public void updateTexture() {
 		if (this.texture != null) {
@@ -148,16 +148,11 @@ public class MonitorSection extends Actor implements Poolable {
 		this.texture = new Texture(this.pixmap);
 	}
 
-	/**
-	 * @return the sectionPos
-	 */
-	public int[] getSectionPos() {
-		return sectionPos;
-	}
-
 	@Override
 	public void reset() {
-		PixmapIO.writePNG(new FileHandle(new File(SECTIONS_FILE, "/section." + this.sectionPos[0] + "." + this.sectionPos[1])), this.pixmap);
+		super.clear();
+
+		PixmapIO.writePNG(new FileHandle(new File(SECTIONS_FILE, "/section." + this.fieldX + "." + this.fieldY)), this.pixmap);
 		
 		this.texture.dispose();
 		this.pixmap.dispose();
